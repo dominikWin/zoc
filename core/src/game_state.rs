@@ -781,19 +781,208 @@ fn load_map_02() -> MapInfo {
 }
 
 fn load_map_03() -> MapInfo {
-    let target_score = Score{n: 5};
-    let map_size = Size2{w: 3, h: 1};
+    let target_score = Score{n: 12};
+    let map_size = Size2{w: 16, h: 16};
     let mut objects = HashMap::new();
     let mut map = Map::new(map_size);
-    let sectors = HashMap::new();
-    for &((x, y), terrain) in &[
-        ((1, 0), Terrain::Trees),
-    ] {
-        *map.tile_mut(MapPos{v: Vector2{x: x, y: y}}) = terrain;
+    let mut sectors = HashMap::new();
+    for &(x, y) in [
+        (4,0),
+        (5,0),
+        (5,1),
+        (5,2),
+        (6,3),
+        (5,4),
+        (6,4),
+        (6,5),
+        (7,5),
+        (8,5),
+        (9,5),
+        (7,6),
+        (9,6),
+        (7,7),
+        (10,7),
+        (6,8),
+        (10,8),
+        (11,8),
+        (6,9),
+        (7,9),
+        (11,9),
+        (6,10),
+        (7,10),
+        (8,10),
+        (10,10),
+        (11,10),
+        (12,10),
+        (9,11),
+        (10,11),
+        (11,11),
+        (12,11),
+        (13,11),
+        (14,11),
+        (13,12),
+        (14,12),
+        (15,12),
+    ].into_iter() {
+        *map.tile_mut(MapPos{v: Vector2{x: x, y: y}}) = Terrain::Water;
     }
+    for &(x, y) in [
+        (6,2),
+        (7,3),
+
+        (4,5),
+        (4,6),
+
+        (13,4),
+        (14,4),
+        (13,5),
+
+        (0,6),
+        (1,7),
+        (2,7),
+        (1,8),
+        (2,8),
+        (3,9),
+
+        (15,6),
+        (15,7),
+        (14,8),
+        (15,8),
+
+        (4,10),
+        (4,11),
+
+        (9,13),
+        (8,14),
+        (8,15),
+        (9,15),
+        (10,15),
+        (11,13),
+    ].into_iter() {
+        *map.tile_mut(MapPos{v: Vector2{x: x, y: y}}) = Terrain::Trees;
+    }
+
+    for &((x, y), count) in &[
+        ((8, 1), 2),
+
+        ((12, 7), 1),
+        ((13, 7), 1),
+        ((14, 7), 1),
+        ((12, 8), 2),
+        ((13, 8), 1),
+
+        ((7, 13), 1),
+        ((6, 14), 1),
+        ((7, 14), 3),
+        ((7, 15), 1),
+
+        ((2, 2), 1),
+        ((2, 3), 1),
+        ((3, 3), 2),
+        ((4, 3), 2),
+        ((2, 4), 3),
+        ((3, 4), 1),
+
+        ((8, 7), 1),
+        ((9, 7), 1),
+        ((8, 8), 2),
+        ((8, 9), 3),
+        ((9, 9), 1),
+
+        ((13, 13), 2),
+        ((14, 13), 1),
+        ((12, 14), 2),
+        ((14, 14), 1),
+        ((13, 15), 3),
+        ((14, 15), 1),
+        ((15, 14), 1),
+    ] {
+        let pos = MapPos{v: Vector2{x: x, y: y}};
+        add_buildings(&mut map, &mut objects, pos, count);
+    }
+    for &(x, y) in &[
+        (3, 2),
+        (7, 8),
+        (9, 8),
+        (13, 14),
+    ] {
+        let pos = MapPos{v: Vector2{x: x, y: y}};
+        add_big_building(&mut map, &mut objects, pos);
+    }
+    add_road(&mut objects, &[
+        MapPos{v: Vector2{x: 0, y: 13}},
+        MapPos{v: Vector2{x: 0, y: 12}},
+        MapPos{v: Vector2{x: 1, y: 12}},
+        MapPos{v: Vector2{x: 2, y: 12}},
+        MapPos{v: Vector2{x: 3, y: 12}},
+        MapPos{v: Vector2{x: 3, y: 13}},
+        MapPos{v: Vector2{x: 2, y: 14}},
+        MapPos{v: Vector2{x: 2, y: 15}},
+    ]);
+    add_road(&mut objects, &[
+        MapPos{v: Vector2{x: 3, y: 12}},
+        MapPos{v: Vector2{x: 3, y: 11}},
+        MapPos{v: Vector2{x: 3, y: 10}},
+        MapPos{v: Vector2{x: 4, y: 9}},
+        MapPos{v: Vector2{x: 4, y: 8}},
+        MapPos{v: Vector2{x: 5, y: 7}},
+        MapPos{v: Vector2{x: 6, y: 7}},
+        MapPos{v: Vector2{x: 7, y: 7}},
+        MapPos{v: Vector2{x: 8, y: 7}},
+    ]);
+    add_road(&mut objects, &[
+        MapPos{v: Vector2{x: 7, y: 7}},
+        MapPos{v: Vector2{x: 6, y: 6}},
+        MapPos{v: Vector2{x: 6, y: 5}},
+    ]);
+    add_road(&mut objects, &[
+        MapPos{v: Vector2{x: 7, y: 4}},
+        MapPos{v: Vector2{x: 7, y: 5}},
+        MapPos{v: Vector2{x: 6, y: 5}},
+        MapPos{v: Vector2{x: 5, y: 5}},
+        MapPos{v: Vector2{x: 4, y: 4}},
+        MapPos{v: Vector2{x: 4, y: 3}},
+        MapPos{v: Vector2{x: 4, y: 2}},
+        MapPos{v: Vector2{x: 5, y: 1}},
+        MapPos{v: Vector2{x: 6, y: 1}},
+    ]);
+    add_road(&mut objects, &[
+        MapPos{v: Vector2{x: 9, y: 7}},
+        MapPos{v: Vector2{x: 9, y: 6}},
+        MapPos{v: Vector2{x: 10, y: 5}},
+        MapPos{v: Vector2{x: 10, y: 4}},
+        MapPos{v: Vector2{x: 11, y: 3}},
+        MapPos{v: Vector2{x: 11, y: 2}},
+        MapPos{v: Vector2{x: 12, y: 2}},
+        MapPos{v: Vector2{x: 13, y: 1}},
+        MapPos{v: Vector2{x: 13, y: 0}},
+    ]);
+    add_road(&mut objects, &[
+        MapPos{v: Vector2{x: 7, y: 13}},
+        MapPos{v: Vector2{x: 7, y: 12}},
+        MapPos{v: Vector2{x: 8, y: 11}},
+        MapPos{v: Vector2{x: 8, y: 10}},
+        MapPos{v: Vector2{x: 9, y: 9}},
+        MapPos{v: Vector2{x: 10, y: 9}},
+        MapPos{v: Vector2{x: 11, y: 9}},
+        MapPos{v: Vector2{x: 11, y: 10}},
+        MapPos{v: Vector2{x: 12, y: 11}},
+        MapPos{v: Vector2{x: 12, y: 12}},
+        MapPos{v: Vector2{x: 13, y: 13}},
+    ]);
+    add_road(&mut objects, &[
+        MapPos{v: Vector2{x: 14, y: 13}},
+        MapPos{v: Vector2{x: 14, y: 12}},
+        MapPos{v: Vector2{x: 15, y: 11}},
+        MapPos{v: Vector2{x: 14, y: 10}},
+        MapPos{v: Vector2{x: 14, y: 9}},
+        MapPos{v: Vector2{x: 13, y: 8}},
+    ]);
     for &((x, y), player_index) in &[
-        ((0, 0), 0),
-        ((2, 0), 1),
+        ((0, 13), 0),
+        ((2, 15), 0),
+        ((13, 0), 1),
+        ((15, 2), 1),
     ] {
         add_reinforcement_sector(
             &mut objects,
@@ -801,6 +990,52 @@ fn load_map_03() -> MapInfo {
             Some(PlayerId{id: player_index}),
         );
     }
+    sectors.insert(
+        SectorId{id: 0},
+        Sector {
+            positions: vec![
+                MapPos{v: Vector2{x: 2, y: 2}},
+                MapPos{v: Vector2{x: 3, y: 2}},
+                MapPos{v: Vector2{x: 2, y: 3}},
+                MapPos{v: Vector2{x: 3, y: 3}},
+                MapPos{v: Vector2{x: 4, y: 3}},
+                MapPos{v: Vector2{x: 2, y: 4}},
+                MapPos{v: Vector2{x: 3, y: 4}},
+            ],
+            owner_id: None,
+        },
+    );
+    sectors.insert(
+        SectorId{id: 1},
+        Sector {
+            positions: vec![
+                MapPos{v: Vector2{x: 8, y: 7}},
+                MapPos{v: Vector2{x: 9, y: 7}},
+                MapPos{v: Vector2{x: 7, y: 8}},
+                MapPos{v: Vector2{x: 8, y: 8}},
+                MapPos{v: Vector2{x: 9, y: 8}},
+                MapPos{v: Vector2{x: 8, y: 9}},
+                MapPos{v: Vector2{x: 9, y: 9}},
+            ],
+            owner_id: None,
+        },
+    );
+    sectors.insert(
+        SectorId{id: 2},
+        Sector {
+            positions: vec![
+                MapPos{v: Vector2{x: 13, y: 13}},
+                MapPos{v: Vector2{x: 14, y: 13}},
+                MapPos{v: Vector2{x: 12, y: 14}},
+                MapPos{v: Vector2{x: 13, y: 14}},
+                MapPos{v: Vector2{x: 14, y: 14}},
+                MapPos{v: Vector2{x: 13, y: 15}},
+                MapPos{v: Vector2{x: 14, y: 15}},
+            ],
+            owner_id: None,
+        },
+    );
+
     (map, objects, sectors, target_score)
 }
 
